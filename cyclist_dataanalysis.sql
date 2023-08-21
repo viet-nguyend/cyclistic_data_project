@@ -233,8 +233,42 @@ from cyclist_data
 group by date_trunc('hour', started_at), member_casual
 order by date_trunc('hour', started_at) 
 ///
-
+///numbers of hours
 select extract(hour from started_at) as hour, member_casual, count(*)
 from cyclist_data
 group by extract(hour from started_at), member_casual
 order by extract(hour from started_at)
+
+
+select member_casual,
+		--- time
+		date_part('hour',started_at) as hour_start,
+		--- daylight
+		(case when date_part('hour',started_at) in (0,1,2,3,4,5,6,7,8,9,10,11) then 'morning'
+			when date_part('hour',started_at) in (12,13,14,15,16,17) then 'afternoon'
+			when date_part('hour',started_at) in (18,19,20,21,22,23) then 'evening'
+		end) as daylight,
+		--- day 
+		date_part('day',started_at) as day_start,
+		--- weekday
+		
+		--- month
+		date_part('month',started_at) as month_start,
+		--- season
+		(case when date_part('month',started_at) in (12,1,2) then 'winter'
+			when date_part('month',started_at) in (3,4,5) then 'spring'
+			when date_part('month',started_at) in (6,7,8) then 'summer'
+			when date_part('month',started_at) in (9,10,11) then 'autumn'
+		end) as season, 
+		count(*) as num_rides
+from cyclist_data
+group by date_part('hour',started_at),
+		date_part('day',started_at),
+		date_part('month',started_at),
+		
+		member_casual
+order by date_part('hour',started_at),
+		date_part('day',started_at),
+		date_part('month',started_at)
+		
+
