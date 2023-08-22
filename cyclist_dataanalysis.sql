@@ -1,20 +1,20 @@
-/////Using data from May, 2021 to April, 2022
+---Using data from May, 2021 to April, 2022
 create table bike_one(
 ride_id VARCHAR(100) primary key,
 rideable_type VARCHAR(100),
 started_at TIMESTAMP,
 ended_at TIMESTAMP,
-start_station_name TEXT,
-start_station_id TEXT,
-end_station_name TEXT,
-end_station_id TEXT,
+start_station_name VARCHAR(100),
+start_station_id VARCHAR(60),
+end_station_name VARCHAR(100),
+end_station_id VARCHAR(60),
 start_lat DECIMAL,
 start_lng DECIMAL,
 end_lat DECIMAL,
 end_lng DECIMAL,
-member_casual TEXT
+member_casual VARCHAR(20)
 );
-////Import table using COPY
+---Import table using COPY
 COPY bike_one(
 ride_id,
 rideable_type,
@@ -34,7 +34,7 @@ FROM 'D:\Bike data\bike_one.csv'
 DELIMITER ','
 CSV HEADER;
 
-//// create a new table contains the data of twelve tables 
+--- create a new table contains the data of twelve months
 using UNION
 create table cyclist_data as(
 select *
@@ -94,17 +94,17 @@ union
 
 select *
 from bike_twelve_042022);
-////result: 5757551 rows
+----result: 5757551 rows
 
-////check for duplicates in ride_id column
+----check for duplicates in ride_id column
 select ride_id,
 count(*)
 from cyclist_data
 group by ride_id
 having count(*)>1
-///result: 0 rows
+----result: 0 rows
 
-///check for nulls
+---check for nulls
 select *
 from cyclist_data
 where started_at is null or ended_at is null
@@ -137,19 +137,19 @@ from cyclist_data
 where rideable_type is null
 
 
-///check for inaccurate data (started_at > ended_at)
+---check for inaccurate data (started_at > ended_at)
 select cast(started_at as date) as start,
 cast(ended_at as date) as end
 from cyclist_data
 where cast(ended_at as date) < cast(started_at as date)
-//// 0 rows
+--- 0 rows
 select started_at,
 ended_at 
 from cyclist_data
 where started_at > ended_at
-/// 140 rows 
+--- 140 rows 
 
-/////check for longtitude and latitude range
+---check for longtitude and latitude range
 SELECT
 MIN(end_lng),MAX(end_lat),
 MIN(end_lat),MAX(end_lat), 
@@ -157,20 +157,20 @@ MIN(start_lng),MAX(start_lng),
 MIN(start_lat),MAX(start_lat)
 FROM cyclist_data;
 
-** data exploring
-////numbers of rideable_type
+--- DATA EXPLORING
+---numbers of rideable_type
 select rideable_type, count(*)
 from cyclist_data
 group by rideable_type
 
 
-///numbers of casual members and anual members
+----numbers of casual members and anual members
 select member_casual, count(*)
 from cyclist_data
 group by member_casual
 
 
-/// numbers of round trips
+---- numbers of round trips
 select start_station_id,
 end_station_id,
 rideable_type,
@@ -182,7 +182,7 @@ group by start_station_id, end_station_id, rideable_type, member_casual
 order by num_round_trips desc
 
 
-\\\ data cleaning
+--- data cleaning
 delete
 from cyclist_data
 where ride_id is null
@@ -199,7 +199,7 @@ or end_lat is null
 or end_lng is null
 or member_casual is null
 
-===> DELETE 1141803
+--===> DELETE 1141803, remain 4615748 rows
 
 delete from cyclist_data
 where started_at >= ended_at
