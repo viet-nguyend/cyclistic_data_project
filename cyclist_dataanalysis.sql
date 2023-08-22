@@ -276,3 +276,17 @@ group by  extract(dow from started_at),
 to_char(started_at, 'Day'),
 member_casual
 order by extract(dow from started_at) desc
+
+---datediff of rides
+select started_at, ended_at,
+ (DATE_PART('Day', ended_at - started_at)) * 24 + ---Date Difference in Days
+ (DATE_PART('Hour', ended_at - started_at)) * 60 + ---Date Difference in Hours
+ (DATE_PART('Minute', ended_at - started_at)) * 60 + ---Date Difference in Minute
+ (DATE_PART('Second', ended_at - started_at)) ---Date Difference in Seconds
+from cyclistic_data
+where  
+(DATE_PART('Day', ended_at - started_at)) * 24 + 
+(DATE_PART('Hour', ended_at - started_at)) * 60 +
+(DATE_PART('Minute', ended_at - started_at)) * 60 +
+(DATE_PART('Second', ended_at - started_at)) < 0
+---- 112 rows affected 
