@@ -233,13 +233,13 @@ from cyclist_data
 group by date_trunc('hour', started_at), member_casual
 order by date_trunc('hour', started_at) 
 ///
-///numbers of hours
+---numbers of hours
 select extract(hour from started_at) as hour, member_casual, count(*)
 from cyclist_data
 group by extract(hour from started_at), member_casual
 order by extract(hour from started_at)
 
-
+---what time with the most participants
 select member_casual,
 		--- time
 		date_part('hour',started_at) as hour_start,
@@ -265,10 +265,14 @@ from cyclist_data
 group by date_part('hour',started_at),
 		date_part('day',started_at),
 		date_part('month',started_at),
-		
 		member_casual
 order by date_part('hour',started_at),
 		date_part('day',started_at),
 		date_part('month',started_at)
-		
-
+--- day of week	
+select extract(dow from started_at), to_char(started_at, 'Day'), member_casual,count(*)
+from cyclist_data
+group by  extract(dow from started_at),
+to_char(started_at, 'Day'),
+member_casual
+order by extract(dow from started_at) desc
