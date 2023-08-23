@@ -217,6 +217,11 @@ group by rideable_type, member_casual
 order by count(*) desc
 
 ---delete station name with multiple ids
+select start_station_name, start_station_id, count(*)
+from cyclistic_data
+where start_station_name = 'Lakefront Trail & Bryn Mawr Ave'
+group by start_station_id, start_station_name
+
 delete 
 from cyclist_data
 where start_station_name = 'Lakefront Trail & Bryn Mawr Ave'
@@ -231,12 +236,6 @@ from cyclist_data
 where start_station_id = '351'
 --- DELETE 85
 
-////
-select date_trunc('hour', started_at), member_casual, count(*)
-from cyclist_data
-group by date_trunc('hour', started_at), member_casual
-order by date_trunc('hour', started_at) 
-///
 ---numbers of hours
 select extract(hour from started_at) as hour, member_casual, count(*)
 from cyclist_data
