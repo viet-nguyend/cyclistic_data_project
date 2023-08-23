@@ -36,7 +36,7 @@ CSV HEADER;
 
 --- create a new table contains the data of twelve months
 using UNION
-create table cyclist_data as(
+create table cyclistic_data as(
 select *
 from bike_one_052021
 	
@@ -96,6 +96,10 @@ select *
 from bike_twelve_042022);
 ----result: 5757551 rows
 
+---- Data exploration
+--view table
+select *
+from cyclistic_data
 ----check for duplicates in ride_id column
 select ride_id,
 count(*)
@@ -155,7 +159,7 @@ MIN(end_lng),MAX(end_lat),
 MIN(end_lat),MAX(end_lat), 
 MIN(start_lng),MAX(start_lng),
 MIN(start_lat),MAX(start_lat)
-FROM cyclist_data;
+FROM cyclistic_data;
 
 --- DATA EXPLORING
 ---numbers of rideable_type
@@ -204,7 +208,7 @@ or member_casual is null
 delete from cyclist_data
 where started_at >= ended_at
 
-====> 652
+----====> 652
 
 ////
 select rideable_type, member_casual, count(*)
@@ -212,20 +216,20 @@ from cyclist_data
 group by rideable_type, member_casual
 order by count(*) desc
 
-////delete station name with multiple ids
+---delete station name with multiple ids
 delete 
 from cyclist_data
 where start_station_name = 'Lakefront Trail & Bryn Mawr Ave'
-==> DELETE 15281
+--- DELETE 15281
 delete
 from cyclist_data
 where start_station_name = 'Loomis St & 89th St'
-==> DELETE 108
-//// delete station id with multiple names
+--- DELETE 108
+--- delete station id with multiple names
 delete
 from cyclist_data
 where start_station_id = '351'
-==> DELETE 85
+--- DELETE 85
 
 ////
 select date_trunc('hour', started_at), member_casual, count(*)
