@@ -35,7 +35,7 @@ DELIMITER ','
 CSV HEADER;
 
 --- create a new table contains the data of twelve months
-using UNION
+---using UNION
 create table cyclistic_data as(
 select *
 from bike_one_052021
