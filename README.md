@@ -55,7 +55,9 @@ In this phase, we will perform different cleaning and transformation procedures 
 ### Data Analysis Tool
 I am using PostgreSQL to store the data in database tables and perform SQL queries. 
 ### Creating database and storing the datasets into tables
-
+<details>
+  <summary>Show SQL query</summary>
+	
 ```sql
 create table bike_one_052021(
 ride_id VARCHAR(100) primary key,
@@ -154,8 +156,13 @@ select *
 from bike_twelve_042022);
 ---this creates a table with 5757551 rows
 ```
-### Data Exploration and Inspection
+</details>
 
+
+### Data Exploration and Inspection
+<details>
+  <summary>Show SQL query</summary>
+	
 ```sql
 --view table
 select *
@@ -167,6 +174,21 @@ from cyclist_data
 group by ride_id
 having count(*)>1
 --- 0 rows affected
+
+---check for unique station_id
+select start_station_name, count(distinct start_station_id)
+from cyclistic_data
+group by start_station_name
+having count(distinct start_station_id) > 1
+
+with unique_start_name as (
+	select distinct start_station_name, start_station_id
+	from cyclistic_data)
+select start_station_name, start_station_id,
+row_number() over(partition by start_station_name) as row_n
+from unique_start_name
+order by row_n desc
+
 
 -- Check for invalid value
 SELECT DISTINCT 
@@ -218,6 +240,8 @@ or end_lng is null
 or member_casual is null
 --- 1141803 rows affected
 ```
+</details>
+
 Upon checking the database, I noticed that there are rows with start_station_name having the same value as start_station_id, this could also happen to column end_station_name and end_station_id
 
 ![Screenshot (223)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/6b85a379-4f05-4841-bb21-5ddafcb7e902)
@@ -234,18 +258,44 @@ As I tried to find station_ids that match station_names, I noticed there are som
 "Pawel Bialowas - Test- PBSC charging station"
 "Throop/Hastings Mobile Station"
 "Wilton Ave & Diversey Pkwy - Charging"
-"Bissell St & Armitage Ave - Charging"
-"DIVVY CASSETTE REPAIR MOBILE STATION"
-"Hastings WH 2"
-"Lincoln Ave & Roscoe St - Charging"
-"Pawel Bialowas - Test- PBSC charging station"
-"Throop/Hastings Mobile Station"
-"Wilton Ave & Diversey Pkwy - Charging"
-
-
 ```
-### Data cleaning
 
 There are no matching station_ids for station_names presented in the tables. However, I was able to find start_station_name for start_station_id "351", which is "Mulligan Ave & Wellington Ave".
+
+### Data cleaning
+
+<details>
+  <summary>Show SQL query</summary>
+	
+```sql
+---Delete from the table where rows contain NULL
+delete
+from cyclistic_data
+where ride_id is null
+or rideable_type is null
+or started_at is null
+or ended_at is null
+or start_station_name is null
+or start_station_id is null
+or end_station_name is null
+or end_station_id is null
+or start_lat is null
+or start_lng is null
+or end_lat is null
+or end_lng is null
+or member_casual is null
+--- 1141803 rows affected
+
+---Delete rows where started_at >= ended_at
+delete
+from cyclistic_data
+where started_at >= ended_at
+---652 rows affected
+
+</details>
+
+
+
+
 
 
