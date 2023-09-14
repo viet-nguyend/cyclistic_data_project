@@ -29,6 +29,7 @@ Identify ride patterns to help us understand the difference between members and 
 
 ## Prepare
 Given that Cyclistic is a fictional company, we will be using the data that has been made available by Motivate International Inc. (acquired by Lyft in 2018) under this [license](https://ride.divvybikes.com/data-license-agreement)
+
 Data source: [Data for Cyclistic](https://divvy-tripdata.s3.amazonaws.com/index.html)
 
 The data is organized monthly and broken down into multiple columns which are:
@@ -189,6 +190,11 @@ row_number() over(partition by start_station_name) as row_n
 from unique_start_name
 order by row_n desc
 
+select start_station_id, count(distinct start_station_name)
+from cyclistic_data
+group by start_station_id
+having count(distinct start_station_name) > 1
+
 
 -- Check for invalid value
 SELECT DISTINCT 
@@ -251,13 +257,14 @@ Upon checking the database, I noticed that there are rows with start_station_nam
 As I tried to find station_ids that match station_names, I noticed there are some stations that are invalid, which should be removed.
 
 ```
-"Bissell St & Armitage Ave - Charging"
-"DIVVY CASSETTE REPAIR MOBILE STATION"
-"Hastings WH 2"
-"Lincoln Ave & Roscoe St - Charging"
-"Pawel Bialowas - Test- PBSC charging station"
-"Throop/Hastings Mobile Station"
-"Wilton Ave & Diversey Pkwy - Charging"
+'Bissell St & Armitage Ave - Charging'
+'DIVVY CASSETTE REPAIR MOBILE STATION'
+'Hastings WH 2'
+'Lincoln Ave & Roscoe St - Charging'
+'Pawel Bialowas - Test- PBSC charging station'
+'Throop/Hastings Mobile Station'
+'Wilton Ave & Diversey Pkwy - Charging'
+'Base - 2132 W Hubbard Warehouse'
 ```
 
 There are no matching station_ids for station_names presented in the tables. However, I was able to find start_station_name for start_station_id "351", which is "Mulligan Ave & Wellington Ave".
@@ -286,12 +293,43 @@ or end_lng is null
 or member_casual is null
 --- 1141803 rows affected
 
----Delete rows where started_at >= ended_at
+---Remove rows where started_at >= ended_at
 delete
 from cyclistic_data
 where started_at >= ended_at
 ---652 rows affected
 
+---delete unvalid station
+delete
+from cyclistic_data
+where start_station_name in ('Bissell St & Armitage Ave - Charging'
+				'DIVVY CASSETTE REPAIR MOBILE STATION'
+				'Hastings WH 2'
+				'Lincoln Ave & Roscoe St - Charging'
+				'Pawel Bialowas - Test- PBSC charging station'
+				'Throop/Hastings Mobile Station'
+				'Wilton Ave & Diversey Pkwy - Charging'
+				'Base - 2132 W Hubbard Warehouse')
+
+delete
+from cyclistic_data
+where end_station_name in ('Bissell St & Armitage Ave - Charging'
+				'DIVVY CASSETTE REPAIR MOBILE STATION'
+				'Hastings WH 2'
+				'Lincoln Ave & Roscoe St - Charging'
+				'Pawel Bialowas - Test- PBSC charging station'
+				'Throop/Hastings Mobile Station'
+				'Wilton Ave & Diversey Pkwy - Charging'
+				'Base - 2132 W Hubbard Warehouse')
+
+
+
+---update station_name 351 to "Mulligan Ave & Wellington Ave".
+UPDATE cyclistic_data
+SET start_station_name = 'Mulligan Ave & Wellington Ave'
+WHERE start_station_id ='351' AND start_station_name = '351'
+---
+```
 </details>
 
 
