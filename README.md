@@ -174,59 +174,19 @@ select ride_id, count(*)
 from cyclist_data
 group by ride_id
 having count(*)>1
---- 0 rows affected
-
----check for unique station_id
-select start_station_name, count(distinct start_station_id)
-from cyclistic_data
-group by start_station_name
-having count(distinct start_station_id) > 1
-
-with unique_start_name as (
-	select distinct start_station_name, start_station_id
-	from cyclistic_data)
-select start_station_name, start_station_id,
-row_number() over(partition by start_station_name) as row_n
-from unique_start_name
-order by row_n desc
-
-select start_station_id, count(distinct start_station_name)
-from cyclistic_data
-group by start_station_id
-having count(distinct start_station_name) > 1
 
 
 -- Check for invalid value
-SELECT DISTINCT 
-		rideable_type
-FROM cyclistic_data;
+select distinct rideable_type
+from cyclistic_data;
 
-SELECT DISTINCT 
-		member_casual 
-FROM cyclistic_data;
+select distinct member_casual 
+from cyclistic_data;
 
-SELECT 
-	MAX(LENGTH(ride_id)) AS max_length, 
-	MIN(LENGTH(ride_id)) AS min_length	   
-FROM cyclistic_data;
-
-select *
-from cyclistic_data
-where started_at >= ended_at
----652 rows affected
-
-select started_at, ended_at,
- (DATE_PART('Day', ended_at - started_at)) * 24 + 
- (DATE_PART('Hour', ended_at - started_at)) * 60 + 
- (DATE_PART('Minute', ended_at - started_at)) * 60 + 
- (DATE_PART('Second', ended_at - started_at))
-from cyclistic_data
-where  
-(DATE_PART('Day', ended_at - started_at)) * 24 + 
-(DATE_PART('Hour', ended_at - started_at)) * 60 +
-(DATE_PART('Minute', ended_at - started_at)) * 60 +
-(DATE_PART('Second', ended_at - started_at)) <= 0
---- 652 rows affected
+select 
+	max(length(ride_id)) AS max_length, 
+	min(length(ride_id)) AS min_length	   
+from cyclistic_data;
 
 ---check for missing values
 select *
@@ -247,6 +207,46 @@ or member_casual is null
 --- 1141803 rows affected
 ```
 </details>
+
+When checking for ride duration, I found that there are rides with negative ride duration, this indicates that the ride ended earlier than it started, which is not possible. At the same time, I would also check for rides with a ride duration of over 24 hours (86400 seconds), because it is considered a lost or stolen bike arcording to this article [link](https://help.divvybikes.com/hc/en-us/articles/360033484791-What-if-I-keep-a-bike-out-too-long-) 
+
+First, I will create a column that will hold the value of the difference between the started_at datetime and the ended_at datetime. 
+
+<details>
+  <summary>Show SQL query</summary>
+
+```sql
+ALTER TABLE cyclistic_data
+ADD ride_length DECIMAL;
+
+UPDATE cyclistic_data
+SET ride_length =  ((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
+ ((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
+ (DATE_PART('Minute', ended_at - started_at)) * 60 + 
+ (DATE_PART('Second', ended_at - started_at))
+ 
+select *
+from cyclistic_data
+where started_at > ended_at
+
+select started_at, ended_at, ride_length
+from cyclistic_data
+where  ride_length < 0 or ride_length > 86400
+
+select started_at, ended_at,
+ ((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
+ ((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
+ (DATE_PART('Minute', ended_at - started_at)) * 60 + 
+ (DATE_PART('Second', ended_at - started_at))
+from cyclistic_data
+where  
+ ((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
+ ((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
+ (DATE_PART('Minute', ended_at - started_at)) * 60 + 
+ (DATE_PART('Second', ended_at - started_at)) > 86400
+```
+</details>
+
 
 Upon checking the database, I noticed that there are rows with start_station_name having the same value as start_station_id, this could also happen to column end_station_name and end_station_id
 
@@ -293,11 +293,20 @@ or end_lng is null
 or member_casual is null
 --- 1141803 rows affected
 
----Remove rows where started_at >= ended_at
+---Remove rows where started_at > ended_at or ride duration is larger than 86400 
 delete
 from cyclistic_data
-where started_at >= ended_at
----652 rows affected
+where
+	((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
+	((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
+	(DATE_PART('Minute', ended_at - started_at)) * 60 + 
+	(DATE_PART('Second', ended_at - started_at)) < 0
+   or
+	((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
+	((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
+	(DATE_PART('Minute', ended_at - started_at)) * 60 + 
+	(DATE_PART('Second', ended_at - started_at)) > 86400
+
 
 ---delete unvalid station
 delete
@@ -328,9 +337,16 @@ where end_station_name in ('Bissell St & Armitage Ave - Charging'
 UPDATE cyclistic_data
 SET start_station_name = 'Mulligan Ave & Wellington Ave'
 WHERE start_station_id ='351' AND start_station_name = '351'
+
+UPDATE cyclistic_data
+SET end_station_name = 'Mulligan Ave & Wellington Ave'
+WHERE end_station_id ='351' AND end_station_name = '351'
 ---
 ```
 </details>
+
+#Analysis
+
 
 
 
