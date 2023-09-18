@@ -345,11 +345,179 @@ WHERE end_station_id ='351' AND end_station_name = '351'
 ```
 </details>
 
-#Analysis
+## Analyze
+
+In this phase, we will do descriptive statistics, perform calculations, and analyze data to find patterns, relationships, and trends. 
+
+### Descriptive Statistics
+
+We will first look at the modes of our rider types, bike types, stations, and temporal columns.
+
+<details>
+  <summary>Show SQL query</summary>
+	
+```sql
+with part_of_day as (
+	select ride_id, (case when date_part('Hour',started_at) in (0,1,2,3,4,5,6,7,8,9,10,11) then 'morning'
+				when date_part('Hour',started_at) in (12,13,14,15,16,17) then 'afternoon'
+				when date_part('Hour',started_at) in (18,19,20,21,22,23) then 'evening'
+			end) as pod
+	from cyclistic_data),
+
+ season as (
+	select ride_id, (case when date_part('Month',started_at) in (11, 12, 1) then 'winter'
+			when date_part('Month',started_at) in (2, 3, 4) then 'spring'
+			when date_part('Month',started_at) in (5, 6, 7) then 'summer'
+			when date_part('Month',started_at) in (8, 9, 10) then 'autumn'
+		end) as ss
+	from cyclistic_data),
+	
+ day_of_week as (
+ 	select ride_id, to_char(started_at, 'day') as dow
+	from cyclistic_data),
+ 
+ ride_month as (
+ 	select ride_id, date_part('Month', started_at) as month
+ 	from cyclistic_data),
+	
+ ride_hour as (
+ 	select ride_id, date_part('Hour', started_at) as hour
+ 	from cyclistic_data)
+
+select mode() within group (order by rideable_type) as mode_rideable_type,
+	mode() within group (order by member_casual) as mode_member_casual,
+	mode() within group (order by start_station_name) as mode_start_station_name,
+	mode() within group (order by end_station_name) as mode_end_station_name,
+	mode() within group (order by part_of_day.pod) as mode_pod,
+	mode() within group (order by season.ss) as mode_ss,
+	mode() within group (order by day_of_week.dow) as mode_dow,
+	mode() within group (order by ride_month.month) as mode_month,
+	mode() within group (order by ride_hour.hour) as mode_hour
+from cyclistic_data
+left join part_of_day
+on cyclistic_data.ride_id = part_of_day.ride_id
+left join season
+on cyclistic_data.ride_id = season.ride_id
+left join day_of_week
+on cyclistic_data.ride_id = day_of_week.ride_id
+left join ride_month
+on cyclistic_data.ride_id = ride_month.ride_id
+left join ride_hour
+on cyclistic_data.ride_id = ride_hour.ride_id
+```
+</details>
+
+![Screenshot (228)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/b5a1ce3b-dc3a-4407-b912-25784bee8a63)
 
 
+----need to fix this imediately
 
+Based on the image above, we can infer the following:
 
+• Members did more bike rides than casual members
 
+• The most preferred bike type is an electric bike
 
+• Streeter Dr and Grand Ave is the favorite start and end station
 
+• The peak season is Summer season
+
+• The peak month is July
+
+• The peak day is Saturday
+
+• The peak part of day is Afternoon and the peak hour is 5 PM
+
+<details>
+  <summary>Show SQL query</summary>
+
+```sql
+with ride_length as (
+select ((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+	((DATE_PART('Hour', ended_at - started_at)) * 60) + 
+	(DATE_PART('Minute', ended_at - started_at)) as ride_length_min
+from cyclistic_data)
+
+select count(ride_length_min),
+		avg(ride_length_min) as avg_ride_length,
+		stddev_samp(ride_length_min) as std,
+		max(ride_length_min) as max,
+		min(ride_length_min) as min,
+		(select distinct percentile_cont(0.25) within group (order by ride_length_min) as percentile_25 from ride_length),
+  		(select distinct percentile_cont(0.50) within group (order by ride_length_min) as percentile_50 from ride_length),
+  		(select distinct percentile_cont(0.75) within group (order by ride_length_min) as percentile_75 from ride_length),
+  		(select distinct percentile_cont(0.95) within group (order by ride_length_min) as percentile_95 from ride_length)
+from ride_length
+```
+
+</details>
+
+the image is wrong, have not delete where started_at > ended_at, this is only for reference
+
+![Screenshot (229)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/460a12ab-05d0-4e53-8b1d-964ed87e61bb)
+
+Also fix this
+
+Based on the image above, we can infer that:
+
+• The average ride duration is 16.21 minutes, which says that most riders use the service for short trips.
+
+• The shortest ride duration is 1 minute and the longest ride duration is 1439.93 which is almost 24 hours.
+
+• Based on the percentile data, most of the rides in this annual dataset fall below 20 minutes, which further supports the first statement.
+
+### Rides distribution
+
+```sql
+with ride_length as (
+select ride_id, member_casual, ((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+	((DATE_PART('Hour', ended_at - started_at)) * 60) + 
+	(DATE_PART('Minute', ended_at - started_at)) as ride_length_min
+from cyclistic_data)
+
+select member_casual, count(ride_id), avg(ride_length_min)
+from ride_length
+group by member_casual
+```
+
+analyze the result to get insight
+
+rides distribution by types and member_casual
+
+```sql
+with ride_length as (
+select ride_id, member_casual, rideable_type, ((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+	((DATE_PART('Hour', ended_at - started_at)) * 60) + 
+	(DATE_PART('Minute', ended_at - started_at)) as ride_length_min
+from cyclistic_data)
+
+select member_casual, rideable_type count(ride_id), avg(ride_length_min)
+from ride_length
+group by member_casual, rideable_type
+```
+
+also analyze to get insight
+
+rides by hours and days
+
+```sql
+with ride_hour as (
+ 	select ride_id, date_part('Hour', started_at) as hour
+ 	from cyclistic_data),
+	
+	day_of_week as (
+ 	select ride_id, to_char(started_at, 'day') as dow
+	from cyclistic_data)
+
+select count(cyclistic_data.ride_id),
+		member_casual,
+		day_of_week.dow,
+		ride_hour.hour
+from cyclistic_data
+left join ride_hour
+on cyclistic_data.ride_id = ride_hour.ride_id
+left join day_of_week
+on cyclistic_data.ride_id = day_of_week.ride_id
+group by member_casual, day_of_week.dow, ride_hour.hour
+order by count(cyclistic_data.ride_id) desc
+```
