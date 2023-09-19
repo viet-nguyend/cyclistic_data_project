@@ -293,3 +293,30 @@ where
 (DATE_PART('Minute', ended_at - started_at)) * 60 +
 (DATE_PART('Second', ended_at - started_at)) < 0
 ---- 112 rows affected 
+
+
+
+
+select
+from cyclistic_data
+where start_station_name = 'Bissell St & Armitage Ave - Charging'
+	or start_station_name = 'DIVVY CASSETTE REPAIR MOBILE STATION'
+	or start_station_name =	'Hastings WH 2'
+	or start_station_name =	'Lincoln Ave & Roscoe St - Charging'
+	or start_station_name =	'Pawel Bialowas - Test- PBSC charging station'
+	or start_station_name =	'Throop/Hastings Mobile Station'
+	or start_station_name =	'Wilton Ave & Diversey Pkwy - Charging'
+	or start_station_name =	'Base - 2132 W Hubbard Warehouse'
+---341 rows
+
+
+from cyclistic_data
+where end_station_name = 'Bissell St & Armitage Ave - Charging'
+	or end_station_name = 'DIVVY CASSETTE REPAIR MOBILE STATION'
+	or end_station_name =	'Hastings WH 2'
+	or end_station_name =	'Lincoln Ave & Roscoe St - Charging'
+	or end_station_name =	'Pawel Bialowas - Test- PBSC charging station'
+	or end_station_name =	'Throop/Hastings Mobile Station'
+	or end_station_name =	'Wilton Ave & Diversey Pkwy - Charging'
+	or end_station_name =	'Base - 2132 W Hubbard Warehouse'
+---353 rows
