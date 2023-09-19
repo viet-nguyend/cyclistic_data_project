@@ -409,7 +409,6 @@ on cyclistic_data.ride_id = ride_hour.ride_id
 
 ![Screenshot (228)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/b5a1ce3b-dc3a-4407-b912-25784bee8a63)
 
-
 ----need to fix this imediately
 
 Based on the image above, we can infer the following:
@@ -491,33 +490,172 @@ select ride_id, member_casual, rideable_type, ((DATE_PART('Day', ended_at - star
 	(DATE_PART('Minute', ended_at - started_at)) as ride_length_min
 from cyclistic_data)
 
-select member_casual, rideable_type count(ride_id), avg(ride_length_min)
+select member_casual, rideable_type, count(ride_id), avg(ride_length_min)
 from ride_length
 group by member_casual, rideable_type
 ```
+
+![Screenshot (231)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/4706c917-53b1-4127-885c-04ac0f734351)
 
 also analyze to get insight
 
 rides by hours and days
 
 ```sql
-with ride_hour as (
- 	select ride_id, date_part('Hour', started_at) as hour
- 	from cyclistic_data),
-	
-	day_of_week as (
- 	select ride_id, to_char(started_at, 'day') as dow
-	from cyclistic_data)
+with ride_distribution as (
+ 	select ride_id, date_part('Hour', started_at) as hour, to_char(started_at, 'day') as dow
+ 	from cyclistic_data)
 
 select count(cyclistic_data.ride_id),
 		member_casual,
-		day_of_week.dow,
-		ride_hour.hour
+		ride_distribution.dow,
+		ride_distribution.hour
 from cyclistic_data
-left join ride_hour
-on cyclistic_data.ride_id = ride_hour.ride_id
-left join day_of_week
-on cyclistic_data.ride_id = day_of_week.ride_id
-group by member_casual, day_of_week.dow, ride_hour.hour
+left join ride_distribution
+on cyclistic_data.ride_id = ride_distribution.ride_id
+where member_casual = 'member'
+group by member_casual, ride_distribution.dow, ride_distribution.hour
+order by count(cyclistic_data.ride_id) desc
+
+with ride_distribution as (
+ 	select ride_id, date_part('Hour', started_at) as hour, to_char(started_at, 'day') as dow
+ 	from cyclistic_data)
+
+select count(cyclistic_data.ride_id),
+		member_casual,
+		ride_distribution.dow,
+		ride_distribution.hour
+from cyclistic_data
+left join ride_distribution
+on cyclistic_data.ride_id = ride_distribution.ride_id
+where member_casual = 'casual'
+group by member_casual, ride_distribution.dow, ride_distribution.hour
 order by count(cyclistic_data.ride_id) desc
 ```
+
+![Screenshot (235)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/21816539-405f-44e7-819b-298b04ef8688)
+
+
+```sql
+with ride_distribution as (select ride_id, to_char(started_at,'day') as day_of_week,
+				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+				((DATE_PART('Hour', ended_at - started_at)) * 60) +
+				(DATE_PART('Minute', ended_at - started_at))) as ride_length_min
+			from cyclistic_data)
+
+select member_casual,
+	ride_distribution.day_of_week,
+	count(cyclistic_data.ride_id),
+	avg(ride_distribution.ride_length_min) as avg_ride_length
+from cyclistic_data
+left join ride_distribution
+on cyclistic_data.ride_id = ride_distribution.ride_id
+where member_casual = 'member'
+group by member_casual, ride_distribution.day_of_week
+order by count(cyclistic_data.ride_id) desc
+
+with ride_distribution as (select ride_id, to_char(started_at,'day') as day_of_week,
+				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+				((DATE_PART('Hour', ended_at - started_at)) * 60) +
+				(DATE_PART('Minute', ended_at - started_at))) as ride_length_min
+			from cyclistic_data)
+
+select member_casual,
+	ride_distribution.day_of_week,
+	count(cyclistic_data.ride_id),
+	avg(ride_distribution.ride_length_min) as avg_ride_length
+from cyclistic_data
+left join ride_distribution
+on cyclistic_data.ride_id = ride_distribution.ride_id
+where member_casual = 'casual'
+group by member_casual, ride_distribution.day_of_week
+order by count(cyclistic_data.ride_id) desc
+
+```
+
+![Screenshot (238)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/5aed97e6-3c0f-400c-84c7-1980f896b44d)
+
+Ride by month
+
+```sql
+with ride_distribution as (select ride_id,
+				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+				((DATE_PART('Hour', ended_at - started_at)) * 60) +
+				(DATE_PART('Minute', ended_at - started_at))) as ride_length_min
+			from cyclistic_data)
+
+select date_part('month', started_at) as month,
+		member_casual,
+		count(cyclistic_data.ride_id),
+		avg(ride_length_min) as avg_ride_length
+from cyclistic_data
+left join ride_distribution
+on cyclistic_data.ride_id = ride_distribution.ride_id
+where member_casual = 'member'
+group by member_casual, date_part('month', started_at)
+
+with ride_distribution as (select ride_id,
+				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+				((DATE_PART('Hour', ended_at - started_at)) * 60) +
+				(DATE_PART('Minute', ended_at - started_at))) as ride_length_min
+			from cyclistic_data)
+
+select date_part('month', started_at) as month,
+		member_casual,
+		count(cyclistic_data.ride_id),
+		avg(ride_length_min) as avg_ride_length
+from cyclistic_data
+left join ride_distribution
+on cyclistic_data.ride_id = ride_distribution.ride_id
+where member_casual = 'casual'
+group by member_casual, date_part('month', started_at)
+```
+
+![Screenshot (241)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/717a8626-8da3-44cf-a7f7-ac6934d2790d)
+
+- Top bike station
+
+member
+
+```sql
+select member_casual,
+		start_station_name,
+		count(ride_id)
+from cyclistic_data
+where member_casual = 'member'
+group by member_casual, start_station_name
+order by count(ride_id) desc
+
+select member_casual,
+		end_station_name,
+		count(ride_id)
+from cyclistic_data
+where member_casual = 'member'
+group by member_casual, end_station_name
+order by count(ride_id) desc
+```
+
+![Screenshot (244)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/537dff7f-4550-466b-9d45-122056699bbe)
+
+casual ride
+
+```sql
+select member_casual,
+		start_station_name,
+		count(ride_id)
+from cyclistic_data
+where member_casual = 'casual'
+group by member_casual, start_station_name
+order by count(ride_id) desc
+
+select member_casual,
+		end_station_name,
+		count(ride_id)
+from cyclistic_data
+where member_casual = 'casual'
+group by member_casual, end_station_name
+order by count(ride_id) desc
+```
+
+![Screenshot (247)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/4fa7b38e-9df1-489e-901a-f2adfac7717b)
+
