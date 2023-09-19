@@ -413,19 +413,13 @@ on cyclistic_data.ride_id = ride_hour.ride_id
 
 Based on the image above, we can infer the following:
 
-• Members did more bike rides than casual members
-
-• The most preferred bike type is an electric bike
-
-• Streeter Dr and Grand Ave is the favorite start and end station
-
-• The peak season is Summer season
-
-• The peak month is July
-
-• The peak day is Saturday
-
-• The peak part of day is Afternoon and the peak hour is 5 PM
+- Members did more bike rides than casual members
+- The most preferred bike type is an electric bike
+- Streeter Dr and Grand Ave is the favorite start and end station
+- The peak season is Summer season
+- The peak month is July
+- The peak day is Saturday
+- The peak part of day is Afternoon and the peak hour is 5 PM
 
 <details>
   <summary>Show SQL query</summary>
@@ -459,11 +453,9 @@ Also fix this
 
 Based on the image above, we can infer that:
 
-• The average ride duration is 16.21 minutes, which says that most riders use the service for short trips.
-
-• The shortest ride duration is 1 minute and the longest ride duration is 1439.93 which is almost 24 hours.
-
-• Based on the percentile data, most of the rides in this annual dataset fall below 20 minutes, which further supports the first statement.
+- The average ride duration is 16.21 minutes, which says that most riders use the service for short trips.
+- The shortest ride duration is 1 minute and the longest ride duration is 1439.93 which is almost 24 hours.
+- Based on the percentile data, most of the rides in this annual dataset fall below 20 minutes, which further supports the first statement.
 
 ### Rides distribution
 
@@ -659,3 +651,10 @@ order by count(ride_id) desc
 
 ![Screenshot (247)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/4fa7b38e-9df1-489e-901a-f2adfac7717b)
 
+## Share
+
+Tableau: chưa làm
+
+## Act
+
+mai làm
