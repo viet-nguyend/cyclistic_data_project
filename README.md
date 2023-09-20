@@ -216,34 +216,25 @@ First, I will create a column that will hold the value of the difference between
   <summary>Show SQL query</summary>
 
 ```sql
-ALTER TABLE cyclistic_data
-ADD ride_length DECIMAL;
-
-UPDATE cyclistic_data
-SET ride_length =  ((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
- ((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
- (DATE_PART('Minute', ended_at - started_at)) * 60 + 
- (DATE_PART('Second', ended_at - started_at))
+---using CTE to create a temporary table contains value of ride_length
+with ride_length as (select started_at, ended_at,
+			((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
+			((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
+			(DATE_PART('Minute', ended_at - started_at)) * 60 + 
+			(DATE_PART('Second', ended_at - started_at)) as ride_duration
+		from cyclistic_data)
  
 select *
-from cyclistic_data
+from ride_length
 where started_at > ended_at
 
-select started_at, ended_at, ride_length
-from cyclistic_data
+select started_at, ended_at, ride_duration
+from ride_length
 where  ride_length < 0 or ride_length > 86400
 
-select started_at, ended_at,
- ((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
- ((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
- (DATE_PART('Minute', ended_at - started_at)) * 60 + 
- (DATE_PART('Second', ended_at - started_at))
-from cyclistic_data
-where  
- ((DATE_PART('Day', ended_at - started_at)) * 24 * 60 * 60) + 
- ((DATE_PART('Hour', ended_at - started_at)) * 60 * 60) + 
- (DATE_PART('Minute', ended_at - started_at)) * 60 + 
- (DATE_PART('Second', ended_at - started_at)) > 86400
+select started_at, ended_at, ride_duration
+from ride_length
+where  ride_duration < 60
 ```
 </details>
 
@@ -357,66 +348,44 @@ We will first look at the modes of our rider types, bike types, stations, and te
   <summary>Show SQL query</summary>
 	
 ```sql
-with part_of_day as (
+with ride_mode as (
 	select ride_id, (case when date_part('Hour',started_at) in (0,1,2,3,4,5,6,7,8,9,10,11) then 'morning'
 				when date_part('Hour',started_at) in (12,13,14,15,16,17) then 'afternoon'
 				when date_part('Hour',started_at) in (18,19,20,21,22,23) then 'evening'
-			end) as pod
-	from cyclistic_data),
-
- season as (
-	select ride_id, (case when date_part('Month',started_at) in (11, 12, 1) then 'winter'
-			when date_part('Month',started_at) in (2, 3, 4) then 'spring'
-			when date_part('Month',started_at) in (5, 6, 7) then 'summer'
-			when date_part('Month',started_at) in (8, 9, 10) then 'autumn'
-		end) as ss
-	from cyclistic_data),
-	
- day_of_week as (
- 	select ride_id, to_char(started_at, 'day') as dow
-	from cyclistic_data),
- 
- ride_month as (
- 	select ride_id, date_part('Month', started_at) as month
- 	from cyclistic_data),
-	
- ride_hour as (
- 	select ride_id, date_part('Hour', started_at) as hour
- 	from cyclistic_data)
+				end) as pod,
+			(case when date_part('Month',started_at) in (11, 12, 1) then 'winter'
+				when date_part('Month',started_at) in (2, 3, 4) then 'spring'
+				when date_part('Month',started_at) in (5, 6, 7) then 'summer'
+				when date_part('Month',started_at) in (8, 9, 10) then 'autumn'
+				end) as ss,
+			to_char(started_at, 'day') as dow,
+			date_part('Month', started_at) as month,
+			date_part('Hour', started_at) as hour
+	from cyclistic_data)
 
 select mode() within group (order by rideable_type) as mode_rideable_type,
 	mode() within group (order by member_casual) as mode_member_casual,
 	mode() within group (order by start_station_name) as mode_start_station_name,
 	mode() within group (order by end_station_name) as mode_end_station_name,
-	mode() within group (order by part_of_day.pod) as mode_pod,
-	mode() within group (order by season.ss) as mode_ss,
-	mode() within group (order by day_of_week.dow) as mode_dow,
-	mode() within group (order by ride_month.month) as mode_month,
-	mode() within group (order by ride_hour.hour) as mode_hour
+	mode() within group (order by ride_mode.pod) as mode_pod,
+	mode() within group (order by ride_mode.ss) as mode_ss,
+	mode() within group (order by ride_mode.dow) as mode_dow,
+	mode() within group (order by ride_mode.month) as mode_month,
+	mode() within group (order by ride_mode.hour) as mode_hour
 from cyclistic_data
-left join part_of_day
-on cyclistic_data.ride_id = part_of_day.ride_id
-left join season
-on cyclistic_data.ride_id = season.ride_id
-left join day_of_week
-on cyclistic_data.ride_id = day_of_week.ride_id
-left join ride_month
-on cyclistic_data.ride_id = ride_month.ride_id
-left join ride_hour
-on cyclistic_data.ride_id = ride_hour.ride_id
+left join ride_mode
+on cyclistic_data.ride_id = ride_mode.ride_id
 ```
 </details>
 
 ![Screenshot (228)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/b5a1ce3b-dc3a-4407-b912-25784bee8a63)
 
-----need to fix this imediately
-
 Based on the image above, we can infer the following:
 
 - Members did more bike rides than casual members
-- The most preferred bike type is an electric bike
+- The most preferred bike type is an classic bike
 - Streeter Dr and Grand Ave is the favorite start and end station
-- The peak season is Summer season
+- The peak season is Autumn season
 - The peak month is July
 - The peak day is Saturday
 - The peak part of day is Afternoon and the peak hour is 5 PM
@@ -426,12 +395,13 @@ Based on the image above, we can infer the following:
 
 ```sql
 with ride_length as (
-select ((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+select ride_id,
+	((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
 	((DATE_PART('Hour', ended_at - started_at)) * 60) + 
 	(DATE_PART('Minute', ended_at - started_at)) as ride_length_min
 from cyclistic_data)
 
-select count(ride_length_min),
+select count(ride_id) as num_of_ride,
 		avg(ride_length_min) as avg_ride_length,
 		stddev_samp(ride_length_min) as std,
 		max(ride_length_min) as max,
@@ -445,17 +415,14 @@ from ride_length
 
 </details>
 
-the image is wrong, have not delete where started_at > ended_at, this is only for reference
-
-![Screenshot (229)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/460a12ab-05d0-4e53-8b1d-964ed87e61bb)
-
-Also fix this
+![Screenshot (253)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/5399d19f-63cf-41c3-a4fc-dfbf1b460062)
 
 Based on the image above, we can infer that:
 
-- The average ride duration is 16.21 minutes, which says that most riders use the service for short trips.
-- The shortest ride duration is 1 minute and the longest ride duration is 1439.93 which is almost 24 hours.
+- The average ride duration is 18.97 minutes, which says that most riders use the service for short trips.
+- The shortest ride duration is 1 minute and the longest ride duration is 1438 which is almost 24 hours.
 - Based on the percentile data, most of the rides in this annual dataset fall below 20 minutes, which further supports the first statement.
+- Only 5% of the ride has more than 30 minutes of ride
 
 ### Rides distribution
 
@@ -471,139 +438,128 @@ from ride_length
 group by member_casual
 ```
 
-analyze the result to get insight
+![Screenshot (256)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/89fe9ec2-a6ad-4e1d-9f65-816ecd72817c)
 
-rides distribution by types and member_casual
+According to the table, members did more ride than casual riders, this is true cause members usually get more benefit and better service. However, the average duration for a ride of a casual rider is higher than that of a member.
+
+
+- Rides distribution by types and member_casual
 
 ```sql
-with ride_length as (
-select ride_id, member_casual, rideable_type, ((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
+with ride_distribution as (
+select ride_id, member_casual, rideable_type, 
+	((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
 	((DATE_PART('Hour', ended_at - started_at)) * 60) + 
 	(DATE_PART('Minute', ended_at - started_at)) as ride_length_min
 from cyclistic_data)
 
-select member_casual, rideable_type, count(ride_id), avg(ride_length_min)
-from ride_length
+select count(ride_id) as num_of_ride, member_casual, rideable_type, avg(ride_length_min)
+from ride_distribution
 group by member_casual, rideable_type
+order by count(ride_id) desc
 ```
 
-![Screenshot (231)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/4706c917-53b1-4127-885c-04ac0f734351)
+![Screenshot (257)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/4f51f1ba-85bf-4d37-9fb3-20c2fd11ff9e)
 
-also analyze to get insight
+From the table, we can infer that members only used classic bike and electric bike. Moreover, there is a pattern with member did more rides than casual riders, but the average time for a ride of a casual rider is always higher than that of a member. This is because...
 
-rides by hours and days
+
+- Rides distribution by hours and days
 
 ```sql
-with ride_distribution as (
- 	select ride_id, date_part('Hour', started_at) as hour, to_char(started_at, 'day') as dow
- 	from cyclistic_data)
-
-select count(cyclistic_data.ride_id),
-		member_casual,
-		ride_distribution.dow,
-		ride_distribution.hour
+select member_casual,
+	to_char(started_at,'day') as day_of_week,
+	date_part('Hour', started_at) as hour,
+	count(ride_id) as num_of_ride
 from cyclistic_data
-left join ride_distribution
-on cyclistic_data.ride_id = ride_distribution.ride_id
 where member_casual = 'member'
-group by member_casual, ride_distribution.dow, ride_distribution.hour
-order by count(cyclistic_data.ride_id) desc
+group by member_casual, day_of_week, hour
+order by count(ride_id) desc
 
-with ride_distribution as (
- 	select ride_id, date_part('Hour', started_at) as hour, to_char(started_at, 'day') as dow
- 	from cyclistic_data)
 
-select count(cyclistic_data.ride_id),
-		member_casual,
-		ride_distribution.dow,
-		ride_distribution.hour
+select member_casual,
+	to_char(started_at,'day') as day_of_week,
+	date_part('Hour', started_at) as hour,
+	count(ride_id) as num_of_ride
 from cyclistic_data
-left join ride_distribution
-on cyclistic_data.ride_id = ride_distribution.ride_id
 where member_casual = 'casual'
-group by member_casual, ride_distribution.dow, ride_distribution.hour
-order by count(cyclistic_data.ride_id) desc
+group by member_casual, day_of_week, hour
+order by count(ride_id) desc
 ```
 
-![Screenshot (235)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/21816539-405f-44e7-819b-298b04ef8688)
-
+![Screenshot (261)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/fff5fcae-8dcb-49bb-9660-f3ba416c234d)
 
 ```sql
-with ride_distribution as (select ride_id, to_char(started_at,'day') as day_of_week,
+with ride_distribution as (select ride_id, member_casual, to_char(started_at,'day') as day_of_week,
 				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
 				((DATE_PART('Hour', ended_at - started_at)) * 60) +
 				(DATE_PART('Minute', ended_at - started_at))) as ride_length_min
 			from cyclistic_data)
 
 select member_casual,
-	ride_distribution.day_of_week,
-	count(cyclistic_data.ride_id),
-	avg(ride_distribution.ride_length_min) as avg_ride_length
-from cyclistic_data
-left join ride_distribution
-on cyclistic_data.ride_id = ride_distribution.ride_id
+	day_of_week,
+	count(ride_id) as num_of_ride,
+	avg(ride_length_min) as avg_ride_length
+from ride_distribution
 where member_casual = 'member'
-group by member_casual, ride_distribution.day_of_week
-order by count(cyclistic_data.ride_id) desc
+group by member_casual, day_of_week
+order by count(ride_id) desc
 
-with ride_distribution as (select ride_id, to_char(started_at,'day') as day_of_week,
+
+with ride_distribution as (select ride_id, member_casual, to_char(started_at,'day') as day_of_week,
 				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
 				((DATE_PART('Hour', ended_at - started_at)) * 60) +
 				(DATE_PART('Minute', ended_at - started_at))) as ride_length_min
 			from cyclistic_data)
 
 select member_casual,
-	ride_distribution.day_of_week,
-	count(cyclistic_data.ride_id),
-	avg(ride_distribution.ride_length_min) as avg_ride_length
-from cyclistic_data
-left join ride_distribution
-on cyclistic_data.ride_id = ride_distribution.ride_id
+	day_of_week,
+	count(ride_id) as num_of_ride,
+	avg(ride_length_min) as avg_ride_length
+from ride_distribution
 where member_casual = 'casual'
-group by member_casual, ride_distribution.day_of_week
-order by count(cyclistic_data.ride_id) desc
-
+group by member_casual, day_of_week
+order by count(ride_id) desc
 ```
 
-![Screenshot (238)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/5aed97e6-3c0f-400c-84c7-1980f896b44d)
+![Screenshot (265)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/1334f702-01f7-4a9e-bcd9-60eb23d4f78b)
 
-Ride by month
+- Rides distributrion by month
 
 ```sql
-with ride_distribution as (select ride_id,
+with ride_distribution as (select ride_id, member_casual, date_part('month', started_at) as month,
 				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
 				((DATE_PART('Hour', ended_at - started_at)) * 60) +
 				(DATE_PART('Minute', ended_at - started_at))) as ride_length_min
 			from cyclistic_data)
 
-select date_part('month', started_at) as month,
+select month,
 		member_casual,
-		count(cyclistic_data.ride_id),
+		count(ride_id) as num_of_ride,
 		avg(ride_length_min) as avg_ride_length
-from cyclistic_data
-left join ride_distribution
-on cyclistic_data.ride_id = ride_distribution.ride_id
+from ride_distribution
 where member_casual = 'member'
-group by member_casual, date_part('month', started_at)
+group by member_casual, month
+order by month
 
-with ride_distribution as (select ride_id,
+
+with ride_distribution as (select ride_id, member_casual, date_part('month', started_at) as month,
 				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
 				((DATE_PART('Hour', ended_at - started_at)) * 60) +
 				(DATE_PART('Minute', ended_at - started_at))) as ride_length_min
 			from cyclistic_data)
 
-select date_part('month', started_at) as month,
+select month,
 		member_casual,
-		count(cyclistic_data.ride_id),
+		count(ride_id) as num_of_ride,
 		avg(ride_length_min) as avg_ride_length
-from cyclistic_data
-left join ride_distribution
-on cyclistic_data.ride_id = ride_distribution.ride_id
+from ride_distribution
 where member_casual = 'casual'
-group by member_casual, date_part('month', started_at)
+group by member_casual, month
+order by month
 ```
 
-![Screenshot (241)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/717a8626-8da3-44cf-a7f7-ac6934d2790d)
+![Screenshot (268)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/2b6972bb-265d-4580-aab4-3d45c5a77b3f)
 
 - Top bike station
 
