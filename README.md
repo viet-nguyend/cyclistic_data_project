@@ -524,6 +524,12 @@ order by count(ride_id) desc
 
 ![Screenshot (265)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/1334f702-01f7-4a9e-bcd9-60eb23d4f78b)
 
+Member: number of rides increase from monday to wednesday, while on the weekend the figure decreases, and the average duration for each ride is relatively same from monday to thursday about 11 minutes while the average duration on weekend tends to be higher. It is also noticeable that most of the ride is done in the afternoon and early in the evening. This can be inferred that rides usually done by workers or students for relaxing or exercise purposes in the afternoon, there are also date of the week that the most ride starts in the morning, which I believe this is for working commute or a replacement for transpotation to school, which futher supports the first conclusion.
+
+Casual: opposite with the figure for member, number of rides done by casual riders is considerably low from monday to thursday mostly below 300000 rides, for the weekend, the number starts increasing significantly to over 450000 rides. The hour distribution for casual start from noon 12 am to 17 pm. The average duration a casual rider did for each day of the week is doubled the average duration a member did, with the lowest is on wednesday 27.67 minutes and highest is on sunday 31.46 minutes. This means that on the weekend casual riders tend to do more rides and ride for a longer period.
+
+In summary, member and casual riders tend to ride in the afternoon and evening. While most of the rides done by member is from monday to wednesday, the figure for casual riders shows the opposite with most of the rides done on the weekend. 
+
 - Rides distributrion by month
 
 ```sql
@@ -561,6 +567,12 @@ order by month
 
 ![Screenshot (268)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/2b6972bb-265d-4580-aab4-3d45c5a77b3f)
 
+Member: most rides done by members focus in summer and fall, which is in may, june, july, august, September and October with number of rides of each month is over 200000, while the rest is below 200000. 
+
+Casual: similar to member, fall and summer all two seasons with the most number of rides. However, the average duration for each month shows significant fluctuations with a wider range from 17 minnutes to 32 minutes.
+
+In general, both member and casual riders prefer to ride in the summer and fall.
+
 - Top bike station
 
 member
@@ -568,7 +580,7 @@ member
 ```sql
 select member_casual,
 		start_station_name,
-		count(ride_id)
+		count(ride_id) as num_of_ride
 from cyclistic_data
 where member_casual = 'member'
 group by member_casual, start_station_name
@@ -576,21 +588,21 @@ order by count(ride_id) desc
 
 select member_casual,
 		end_station_name,
-		count(ride_id)
+		count(ride_id) as num_of_ride
 from cyclistic_data
 where member_casual = 'member'
 group by member_casual, end_station_name
 order by count(ride_id) desc
 ```
 
-![Screenshot (244)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/537dff7f-4550-466b-9d45-122056699bbe)
+![Screenshot (275)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/8d6b70ad-3204-4e84-9454-8129837a687d)
 
 casual ride
 
 ```sql
 select member_casual,
 		start_station_name,
-		count(ride_id)
+		count(ride_id) as num_of_ride
 from cyclistic_data
 where member_casual = 'casual'
 group by member_casual, start_station_name
@@ -598,18 +610,21 @@ order by count(ride_id) desc
 
 select member_casual,
 		end_station_name,
-		count(ride_id)
+		count(ride_id) as num_of_ride
 from cyclistic_data
 where member_casual = 'casual'
 group by member_casual, end_station_name
 order by count(ride_id) desc
 ```
 
-![Screenshot (247)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/4fa7b38e-9df1-489e-901a-f2adfac7717b)
+![Screenshot (278)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/984e1981-66a6-453d-89dd-eaaa1f28be7d)
 
 ## Share
 
-Tableau: chưa làm
+In this phase, we will create visualizations and share our key findings.
+
+### Key insight
+
 
 ## Act
 
