@@ -363,7 +363,8 @@ with ride_mode as (
 			date_part('Hour', started_at) as hour
 	from cyclistic_data)
 
-select mode() within group (order by rideable_type) as mode_rideable_type,
+select count(cyclistic_data.ride_id) as num_of_ride,
+	mode() within group (order by rideable_type) as mode_rideable_type,
 	mode() within group (order by member_casual) as mode_member_casual,
 	mode() within group (order by start_station_name) as mode_start_station_name,
 	mode() within group (order by end_station_name) as mode_end_station_name,
@@ -378,7 +379,7 @@ on cyclistic_data.ride_id = ride_mode.ride_id
 ```
 </details>
 
-![Screenshot (228)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/b5a1ce3b-dc3a-4407-b912-25784bee8a63)
+![Screenshot (280)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/ea36c2a7-0320-42e1-8f6c-633301bae1ed)
 
 Based on the image above, we can infer the following:
 
