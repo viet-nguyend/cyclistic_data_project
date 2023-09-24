@@ -525,9 +525,9 @@ order by count(ride_id) desc
 
 ![Screenshot (265)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/1334f702-01f7-4a9e-bcd9-60eb23d4f78b)
 
-Member: number of rides increase from monday to wednesday, while on the weekend the figure decreases, and the average duration for each ride is relatively same from monday to thursday about 11 minutes while the average duration on weekend tends to be higher. It is also noticeable that most of the ride is done in the afternoon and early in the evening. This can be inferred that rides usually done by workers or students for relaxing or exercise purposes in the afternoon, there are also date of the week that the most ride starts in the morning, which I believe this is for working commute or a replacement for transpotation to school, which futher supports the first conclusion.
+Member: number of rides increase from monday to wednesday, while on the weekend the figure decreases, and the average duration for each ride is relatively similar with no significant change from monday to thursday about 11 minutes while the average duration on weekend tends to be higher. It is also noticeable that most of the ride is done in the afternoon and early in the evening. This can be inferred that rides usually done by workers or students for relaxing or exercise purposes in the afternoon, there are also date of the week that the most ride starts in the morning, which I believe this is for working commute or a replacement for transpotation to school, which futher supports the first conclusion.
 
-Casual: opposite with the figure for member, number of rides done by casual riders is considerably low from monday to thursday mostly below 300000 rides, for the weekend, the number starts increasing significantly to over 450000 rides. The hour distribution for casual start from noon 12 am to 17 pm. The average duration a casual rider did for each day of the week is doubled the average duration a member did, with the lowest is on wednesday 27.67 minutes and highest is on sunday 31.46 minutes. This means that on the weekend casual riders tend to do more rides and ride for a longer period.
+Casual: opposite with the figure for member, number of rides done by casual riders is considerably low from monday to thursday mostly below 300000 rides, for the weekend, the number starts increasing significantly to over 450000 rides. The hour distribution for casual start from noon 12 am to 17 pm. The average duration done by a casual rider for each day of the week is doubled the average duration done by a member, with the lowest is on wednesday 27.67 minutes and highest is on sunday 31.46 minutes. This means that on the weekend casual riders tend to do more rides and ride for a longer period. 
 
 In summary, member and casual riders tend to ride in the afternoon and evening. While most of the rides done by member is from monday to wednesday, the figure for casual riders shows the opposite with most of the rides done on the weekend. 
 
@@ -598,6 +598,8 @@ order by count(ride_id) desc
 
 ![Screenshot (275)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/8d6b70ad-3204-4e84-9454-8129837a687d)
 
+According to the table, start and end station Kingsbury St & Kinzie St has the most rides, and almost all of the ride has the same start and end station, which explains that most of the trip that members took are round trips. 
+
 casual ride
 
 ```sql
@@ -620,6 +622,8 @@ order by count(ride_id) desc
 
 ![Screenshot (278)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/984e1981-66a6-453d-89dd-eaaa1f28be7d)
 
+For casual riders, most rides started and ended at the same station, Streeter Dr & Grand Ave. This is similar to member, which mean that most of the rides done by casual riders are round trips.
+
 ## Share
 
 In this phase, we will create visualizations and share our key findings.
@@ -629,4 +633,4 @@ In this phase, we will create visualizations and share our key findings.
 
 ## Act
 
-mai làm
+
