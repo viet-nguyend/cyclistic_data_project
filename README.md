@@ -1,12 +1,14 @@
 # Cyclistic
 Google Data Analytics Professional Certificate Capstone Project
 ### Scenario
+
 I am a junior data analyst working in the marketing analyst team at Cyclistic, a bike-share company in Chicago. The director
 of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore,
 my team wants to understand how casual riders and annual members use Cyclistic bikes differently. From these insights,
 my team will design a new marketing strategy to convert casual riders into annual members. But first, Cyclistic executives
 must approve my recommendations, so they must be backed up with compelling data insights and professional data
 visualizations
+
 ### About Cyclistic
 Cyclistic launched in 2016 and grown to a fleet of 5,824 bicycles that are geotracked and locked into a network of 692 stations across Chicago.
 
@@ -15,9 +17,11 @@ Until now, Cyclistic marketing strategy relied on building general awareness and
 Financial analyst in Cyclistic has concluded that annual members are much more profitable than casual riders. Therefore, it is believe that the key to future growth was to maximize the number of annual members. It is also believe that it will be more beneficial to create a marketing campaign that targets casual members to become Cyclistic members.
 
 For this case study, I will be using the Google Data Analytics Certificate processes to provide recommendation to the Director of Marketing.
+
 ## Ask
 
 ### Key Stakeholders
+
 1. Lily Moreno: The director of marketing and responsible for the development of campaigns and initiatives to promote the bike-share program through email, social media, and other channels.
 
 2. Cyclistic executive team: The team that will decide whether to approve the recommended marketing program.
@@ -25,9 +29,11 @@ For this case study, I will be using the Google Data Analytics Certificate proce
 3. Cyclistic marketing analytics team: A team of data analysts who are responsible for collecting, analyzing, and reporting data that helps guide Cyclistic marketing strategy.
 
 ### Business Task
+
 Identify ride patterns to help us understand the difference between members and casual users, which will aid in designing a marketing strategy that aims to convert casual riders into members.
 
 ## Prepare
+
 Given that Cyclistic is a fictional company, we will be using the data that has been made available by Motivate International Inc. (acquired by Lyft in 2018) under this [license](https://ride.divvybikes.com/data-license-agreement)
 
 Data source: [Data for Cyclistic](https://divvy-tripdata.s3.amazonaws.com/index.html)
@@ -52,9 +58,13 @@ The data is organized monthly and broken down into multiple columns which are:
 For this analysis, we will analyze historical data trip from May 2021 to April 2022.
 
 ## Process
+
 In this phase, we will perform different cleaning and transformation procedures using any data analysis tools to ensure data integrity. 
+
 ### Data Analysis Tool
+
 I am using PostgreSQL to store the data in database tables and perform SQL queries. 
+
 ### Creating database and storing the datasets into tables
 <details>
   <summary>Show SQL query</summary>
@@ -632,12 +642,26 @@ In this phase, we will create visualizations and share our key findings.
 ### Key insight
 
 1. The number of rides done by members accounts for the majority of the total rides at 56.20%, compared to casual users, who account for 43.80%.
-2. Members usually ride from monday to friday, and most active during rush hours between 8am to 7 am and 4pm to 6pm, member usually ride longer on the weekend
-3. Casual mostly ride in the afternoon between 2pm to 6pm of every day in the week, and most frequent during the weekend
-4. Both member and casual users prefer to ride in the warm and cozy season for member is July and for casual user is August.
-5. 
-
-
+2. Members mostly use the service as a means of transportation to work or school, usually riding on weekdays at rush hours between 7 am to 8 am and 4 pm to 6 pm.
+3. Casual users predominantly ride in the afternoon between 2 pm and 6 pm every day of the week, with the highest frequency occurring during the weekend. They primarily use the service for recreational activities and relaxation.
+4. Both members and casual users prefer to ride during the warm season, with July being the preferred month for members and August being the preferred month for casual users.
+5. While the number of rides by members is consistently higher than that of casual users, the average usage time for casual users is twice as long as that of members.
+6. Both members and casual users spend more time using the service on the weekend compared to weekdays.
+7. Docked bike is the least preferred bike type by both members and casual riders, while classic bike is the most preferred.
+8. Members' top start stations and end stations are the same, and this is also true for casual riders.
+   
 ## Act
 
+In this phase, I will use the insight to recommend some marketing strategy to convert casual riders to members, and retain existing members
+
+### Recommendations
+
+1. Offer casual riders a limited-time membership trial at a reduced cost or for free. This allows them to experience the benefits of membership without a long-term commitment.
+2. Create seasonal membership packages that align with riders' preferences. For instance, offer discounted summer memberships during peak riding months.
+3. Implement dynamic pricing based on demand. Charge higher rates for peak weekend hours and lower rates for less popular times to incentivize membership
+4. Create seasonal promotions targeting casual riders during peak riding seasons. Highlight the benefits of membership in these promotions.
+5. Place marketing materials near popular bike stations, such as posters or QR codes that lead to membership sign-up pages.
+6. Provide ongoing incentives for members who renew their memberships, such as lower renewal fees, extended membership durations, or exclusive rewards.
+7. Offer exclusive services or features to members, such as priority access to bikes, faster unlocking, or bike reservations during peak times.
+8. Implement a loyalty program for existing members, rewarding them for their continued membership. Offer points, discounts, or free rides for referring new members or for consistent usage.
 
