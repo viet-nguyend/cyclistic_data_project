@@ -441,7 +441,7 @@ group by member_casual
 
 ![Screenshot (256)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/89fe9ec2-a6ad-4e1d-9f65-816ecd72817c)
 
-According to the table, members did more ride than casual riders, this is true cause members usually get more benefit and better service. However, the average duration for a ride of a casual rider is higher than that of a member. To get a clearer picture regarding this pattern, futher analysis is recommended
+According to the table, members did more ride than casual riders, this is true cause members usually get more benefit and better service but the average duration for a ride of a casual rider is higher than that of a member. 
 
 
 - Rides distribution by types and member_casual
@@ -462,8 +462,7 @@ order by count(ride_id) desc
 
 ![Screenshot (257)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/4f51f1ba-85bf-4d37-9fb3-20c2fd11ff9e)
 
-From the table, we can infer that members only used classic bike and electric bike. Moreover, there is a pattern with member did more rides than casual riders, but the average time for a ride of a casual rider is always higher than that of a member. This is because...
-
+From the table, we can infer that members only used classic bike and electric bike. Moreover, there is a pattern with member did more rides than casual riders, but the average time for a ride of a casual rider is always higher than that of a member. To get a clearer picture about this pattern, futher analysis will be conducted.
 
 - Rides distribution by hours and days
 
@@ -525,9 +524,9 @@ order by count(ride_id) desc
 
 ![Screenshot (265)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/1334f702-01f7-4a9e-bcd9-60eb23d4f78b)
 
-Member: According to the table, most rides are on weekday from Monday to Friday, usually in the afternoon from 4 pm and in the morning from 7 pm, which are rush hours when people start and end their day. The number of rides starts increasing from Monday and reaches its peak on Wednesday, and then consitently decrease from Thursday to Sunday. Regarding the average time of bike usage of member, the average duration which members using bikes shows relatively similar from Monday to Thursday, approximately 11 minutes, whereas on the weekend the average time members spend cycling increase gradually from 12 minutes on Friday to 14 minutes on Sunday. This suggests that members mainly use bicycles as a mean of transporation for work and school, because most rides are usually at rush hours on weekday. On the contrary to the number of rides and the average duration on weekday, the average time for using bikes on the weekend shows a rise but the number or rides decrease, which indicates that the purpose of bike usage by member on the weekend are for recreational activities.
+Member: According to the table, most rides are on weekday from Monday to Friday, usually in the afternoon from 4 pm and in the morning from 7 pm, which are rush hours when people start and end their day. The number of rides starts increasing from Monday and reaches its peak on Wednesday, and then consitently decrease from Thursday to Sunday. Regarding the average time of bike usage of members, the average duration members using bikes shows relatively similar from Monday to Thursday, approximately 11 minutes, whereas on the weekend the average time members spend cycling increase gradually from 12 minutes on Friday to 14 minutes on Sunday. This suggests that members mainly use bicycles as a mean of transporation for work and school, because most rides are usually at rush hours on weekday. On the contrary to the number of rides and the average duration on weekday, the average time for using bikes on the weekend shows a rise but the number or rides decrease, which indicates that the purpose of bike usage by member on the weekend are for recreational activities.
 
-Casual: opposite with the figure for member, the number of rides done by casual riders is considerably low from monday to thursday mostly below 300000 rides, for the weekend, the number starts increasing significantly to over 450000 rides. Futhermore, most rides usually started in the afternoon from 12pm to 17pm. In terms of the average cycling duration of casual users, the average time a casual users using bikes starts increasing on thursday, rise significantly from 25 minutes on friday to 31 minutes on sunday, which is also the highest time of bike usage by casual riders. With a high number of rides and the average time, this infer that casual riders use bike to relax on the weekend or do fun activities.
+Casual: In contrast to members, the number of rides by casual riders is considerably lower from Monday to Thursday, mostly below 300,000 rides. However, during the weekend, it experiences a significant increase, surpassing 450,000 rides. Furthermore, most rides typically commence in the afternoon, between 12 pm and 5 pm.Regarding the average cycling duration of casual users, it begins to rise noticeably on Thursday and continues to increase, reaching its peak at 31 minutes on Sunday, which is also the highest duration for bike usage among casual riders. With both the higher number of rides and longer average ride times during the weekend, it can be inferred that casual riders use bikes for relaxation and recreational activities during this time.
 
 In summary, member and casual riders tend to ride in the afternoon and evening. While most of the rides done by member is on weekday, the figure for casual riders shows the opposite with most of the rides done on the weekend. 
 
@@ -628,7 +627,15 @@ For casual riders, most rides started and ended at the same station, Streeter Dr
 
 In this phase, we will create visualizations and share our key findings.
 
+[Dashboard](https://public.tableau.com/views/Data_16953905192160/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link)
+
 ### Key insight
+
+1. The number of rides done by members accounts for the majority of the total rides at 56.20%, compared to casual users, who account for 43.80%.
+2. Members usually ride from monday to friday, and most active during rush hours between 8am to 7 am and 4pm to 6pm, member usually ride longer on the weekend
+3. Casual mostly ride in the afternoon between 2pm to 6pm of every day in the week, and most frequent during the weekend
+4. Both member and casual users prefer to ride in the warm and cozy season for member is July and for casual user is August.
+5. 
 
 
 ## Act
