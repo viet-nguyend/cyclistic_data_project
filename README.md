@@ -220,8 +220,6 @@ or member_casual is null
 
 When checking for ride duration, I found that there are rides with negative ride duration, this indicates that the ride ended earlier than it started, which is not possible. At the same time, I would also check for rides with a ride duration of over 24 hours (86400 seconds), because it is considered a lost or stolen bike arcording to this article [link](https://help.divvybikes.com/hc/en-us/articles/360033484791-What-if-I-keep-a-bike-out-too-long-) 
 
-First, I will create a column that will hold the value of the difference between the started_at datetime and the ended_at datetime. 
-
 <details>
   <summary>Show SQL query</summary>
 
@@ -419,23 +417,24 @@ select count(ride_id) as num_of_ride,
 		min(ride_length_min) as min,
 		(select distinct percentile_cont(0.25) within group (order by ride_length_min) as percentile_25 from ride_length),
   		(select distinct percentile_cont(0.50) within group (order by ride_length_min) as percentile_50 from ride_length),
-  		(select distinct percentile_cont(0.75) within group (order by ride_length_min) as percentile_75 from ride_length),
-  		(select distinct percentile_cont(0.95) within group (order by ride_length_min) as percentile_95 from ride_length)
+  		(select distinct percentile_cont(0.75) within group (order by ride_length_min) as percentile_75 from ride_length)
 from ride_length
 ```
 
 </details>
 
-![Screenshot (253)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/5399d19f-63cf-41c3-a4fc-dfbf1b460062)
+![Screenshot (284)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/83e9c3f2-e9fc-48a3-80e4-f889eeefcd3c)
 
 Based on the image above, we can infer that:
 
 - The average ride duration is 18.97 minutes, which says that most riders use the service for short trips.
 - The shortest ride duration is 1 minute and the longest ride duration is 1438 which is almost 24 hours.
 - Based on the percentile data, most of the rides in this annual dataset fall below 20 minutes, which further supports the first statement.
-- Only 5% of the ride has more than 30 minutes of ride
 
 ### Rides distribution
+
+<details>
+  <summary>Show SQL query</summary>
 
 ```sql
 with ride_length as (
@@ -448,13 +447,16 @@ select member_casual, count(ride_id), avg(ride_length_min)
 from ride_length
 group by member_casual
 ```
+</details>
 
 ![Screenshot (256)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/89fe9ec2-a6ad-4e1d-9f65-816ecd72817c)
 
-According to the table, members did more ride than casual riders, this is true cause members usually get more benefit and better service but the average duration for a ride of a casual rider is higher than that of a member. 
-
+The table indicates that members have a higher number of rides compared to casual riders, which can be attributed to the additional benefits and improved services available to members. Interestingly, the average ride duration for casual riders surpasses that of members.
 
 - Rides distribution by types and member_casual
+
+<details>
+  <summary>Show SQL query</summary>
 
 ```sql
 with ride_distribution as (
@@ -469,13 +471,17 @@ from ride_distribution
 group by member_casual, rideable_type
 order by count(ride_id) desc
 ```
+</details>
 
 ![Screenshot (257)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/4f51f1ba-85bf-4d37-9fb3-20c2fd11ff9e)
 
-From the table, we can infer that members only used classic bike and electric bike. Moreover, there is a pattern with member did more rides than casual riders, but the average time for a ride of a casual rider is always higher than that of a member. To get a clearer picture about this pattern, futher analysis will be conducted.
+Based on the table, we can infer that members exclusively utilized classic bikes and electric bikes. Furthermore, a consistent pattern emerges where members completed more rides than casual riders, while the average ride duration for casual riders consistently exceeded that of members. Notably, docked bikes exhibited the highest average usage duration. To gain deeper insights into the behavior and preferences of members and casual users, further analysis will be conducted.
 
 - Rides distribution by hours and days
 
+<details>
+  <summary>Show SQL query</summary>
+
 ```sql
 select member_casual,
 	to_char(started_at,'day') as day_of_week,
@@ -496,9 +502,13 @@ where member_casual = 'casual'
 group by member_casual, day_of_week, hour
 order by count(ride_id) desc
 ```
+</details>
 
 ![Screenshot (261)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/fff5fcae-8dcb-49bb-9660-f3ba416c234d)
 
+<details>
+  <summary>Show SQL query</summary>
+
 ```sql
 with ride_distribution as (select ride_id, member_casual, to_char(started_at,'day') as day_of_week,
 				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
@@ -531,6 +541,7 @@ where member_casual = 'casual'
 group by member_casual, day_of_week
 order by count(ride_id) desc
 ```
+</details>
 
 ![Screenshot (265)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/1334f702-01f7-4a9e-bcd9-60eb23d4f78b)
 
@@ -542,6 +553,9 @@ In summary, member and casual riders tend to ride in the afternoon and evening. 
 
 - Rides distributrion by month
 
+<details>
+  <summary>Show SQL query</summary>
+	
 ```sql
 with ride_distribution as (select ride_id, member_casual, date_part('month', started_at) as month,
 				(((DATE_PART('Day', ended_at - started_at)) * 24 * 60) + 
@@ -574,12 +588,13 @@ where member_casual = 'casual'
 group by member_casual, month
 order by month
 ```
+</details>
 
 ![Screenshot (268)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/2b6972bb-265d-4580-aab4-3d45c5a77b3f)
 
-Member: most rides done by members focus in summer and fall, which is in may, june, july, august, September and October with number of rides of each month is over 200000, while the rest is below 200000. 
+Member: From the table, it's evident that the number of rides by members begins to increase in February, peaks in August, and then gradually decreases until January. The average usage duration appears to follow a similar pattern to the number of rides. This suggests that members prefer to ride during the summer months, enjoying the pleasant and comfortable weather, while they tend to avoid riding in the winter or during cold temperature periods
 
-Casual: similar to member, fall and summer all two seasons with the most number of rides. However, the average duration for each month shows significant fluctuations with a wider range from 17 minnutes to 32 minutes.
+Casual: Like members, both fall and summer stand out as the two seasons with the highest number of rides. However, the average duration of each month shows significant fluctuations with a wider range than that of members
 
 In general, both member and casual riders prefer to ride in the summer and fall.
 
@@ -587,6 +602,9 @@ In general, both member and casual riders prefer to ride in the summer and fall.
 
 member
 
+<details>
+  <summary>Show SQL query</summary>
+
 ```sql
 select member_casual,
 		start_station_name,
@@ -604,6 +622,7 @@ where member_casual = 'member'
 group by member_casual, end_station_name
 order by count(ride_id) desc
 ```
+</details>
 
 ![Screenshot (275)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/8d6b70ad-3204-4e84-9454-8129837a687d)
 
@@ -611,6 +630,9 @@ According to the table, start and end station Kingsbury St & Kinzie St has the m
 
 casual ride
 
+<details>
+  <summary>Show SQL query</summary>
+
 ```sql
 select member_casual,
 		start_station_name,
@@ -628,6 +650,7 @@ where member_casual = 'casual'
 group by member_casual, end_station_name
 order by count(ride_id) desc
 ```
+</details>
 
 ![Screenshot (278)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/984e1981-66a6-453d-89dd-eaaa1f28be7d)
 
@@ -664,4 +687,3 @@ In this phase, I will use the insight to recommend some marketing strategy to co
 6. Provide ongoing incentives for members who renew their memberships, such as lower renewal fees, extended membership durations, or exclusive rewards.
 7. Offer exclusive services or features to members, such as priority access to bikes, faster unlocking, or bike reservations during peak times.
 8. Implement a loyalty program for existing members, rewarding them for their continued membership. Offer points, discounts, or free rides for referring new members or for consistent usage.
-
