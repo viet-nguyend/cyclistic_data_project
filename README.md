@@ -249,9 +249,9 @@ where  ride_duration < 60
 
 Upon checking the database, I noticed that there are rows with start_station_name having the same value as start_station_id, this could also happen to column end_station_name and end_station_id
 
-![Screenshot (223)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/6b85a379-4f05-4841-bb21-5ddafcb7e902)
+<img src="Screenshot (223).png" alt="alt text">
 
-![Screenshot (225)](https://github.com/viet-nguyend/cyclist_data/assets/142729978/248c5409-3477-435c-8c18-dd0a26c7a431)
+<img src="Screenshot (225).png" alt="alt text">
 
 As I tried to find station_ids that match station_names, I noticed there are some stations that are invalid, which should be removed.
 
@@ -387,7 +387,7 @@ on cyclistic_data.ride_id = ride_mode.ride_id
 ```
 </details>
 
-![Screenshot (280)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/ea36c2a7-0320-42e1-8f6c-633301bae1ed)
+<img src="Screenshot (280).png" alt="alt text">
 
 Based on the image above, we can infer the following:
 
@@ -423,7 +423,7 @@ from ride_length
 
 </details>
 
-![Screenshot (284)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/83e9c3f2-e9fc-48a3-80e4-f889eeefcd3c)
+<img src="Screenshot (284).png" alt="alt text">
 
 Based on the image above, we can infer that:
 
@@ -443,13 +443,13 @@ select ride_id, member_casual, ((DATE_PART('Day', ended_at - started_at)) * 24 *
 	(DATE_PART('Minute', ended_at - started_at)) as ride_length_min
 from cyclistic_data)
 
-select member_casual, count(ride_id), avg(ride_length_min)
+select member_casual, count(ride_id) as num_of_ride, avg(ride_length_min)
 from ride_length
 group by member_casual
 ```
 </details>
 
-<img src="Screenshot (256).png" alt="Ride by member&casual">
+<img src="Screenshot (256).png" alt="alt text">
 
 The table indicates that members have a higher number of rides compared to casual riders, which can be attributed to the additional benefits and improved services available to members. Interestingly, the average ride duration for casual riders surpasses that of members.
 
@@ -473,7 +473,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-![Screenshot (257)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/4f51f1ba-85bf-4d37-9fb3-20c2fd11ff9e)
+<img src="Screenshot (257).png" alt="alt text">
 
 Based on the table, we can infer that members exclusively utilized classic bikes and electric bikes. Furthermore, a consistent pattern emerges where members completed more rides than casual riders, while the average ride duration for casual riders consistently exceeded that of members. Notably, docked bikes exhibited the highest average usage duration. To gain deeper insights into the behavior and preferences of members and casual users, further analysis will be conducted.
 
@@ -504,7 +504,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-![Screenshot (261)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/fff5fcae-8dcb-49bb-9660-f3ba416c234d)
+<img src="Screenshot (261).png" alt="alt text">
 
 <details>
   <summary>Show SQL query</summary>
@@ -543,7 +543,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-![Screenshot (265)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/1334f702-01f7-4a9e-bcd9-60eb23d4f78b)
+<img src="Screenshot (265).png" alt="alt text">
 
 Member: According to the table, most rides are on weekday from Monday to Friday, usually in the afternoon from 4 pm and in the morning from 7 pm, which are rush hours when people start and end their day. The number of rides starts increasing from Monday and reaches its peak on Wednesday, and then consitently decrease from Thursday to Sunday. Regarding the average time of bike usage of members, the average duration members using bikes shows relatively similar from Monday to Thursday, approximately 11 minutes, whereas on the weekend the average time members spend cycling increase gradually from 12 minutes on Friday to 14 minutes on Sunday. This suggests that members mainly use bicycles as a mean of transporation for work and school, because most rides are usually at rush hours on weekday. On the contrary to the number of rides and the average duration on weekday, the average time for using bikes on the weekend shows a rise but the number or rides decrease, which indicates that the purpose of bike usage by member on the weekend are for recreational activities.
 
@@ -590,7 +590,7 @@ order by month
 ```
 </details>
 
-![Screenshot (268)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/2b6972bb-265d-4580-aab4-3d45c5a77b3f)
+<img src="Screenshot (268).png" alt="alt text">
 
 Member: From the table, it's evident that the number of rides by members begins to increase in February, peaks in August, and then gradually decreases until January. The average usage duration appears to follow a similar pattern to the number of rides. This suggests that members prefer to ride during the summer months, enjoying the pleasant and comfortable weather, while they tend to avoid riding in the winter or during cold temperature periods
 
@@ -624,7 +624,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-![Screenshot (275)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/8d6b70ad-3204-4e84-9454-8129837a687d)
+<img src="Screenshot (275).png" alt="alt text">
 
 According to the table, start and end station Kingsbury St & Kinzie St has the most rides, and almost all of the ride has the same start and end station, which explains that most of the trip that members took are round trips. 
 
@@ -652,7 +652,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-![Screenshot (278)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/984e1981-66a6-453d-89dd-eaaa1f28be7d)
+<img src="Screenshot (278).png" alt="alt text">
 
 For casual riders, most rides started and ended at the same station, Streeter Dr & Grand Ave. This is similar to member, which mean that most of the rides done by casual riders are round trips.
 
