@@ -449,7 +449,7 @@ group by member_casual
 ```
 </details>
 
-![Screenshot (256)](https://github.com/viet-nguyend/cyclistic_data_project/assets/142729978/89fe9ec2-a6ad-4e1d-9f65-816ecd72817c)
+<img src="Screenshot (256).png" alt="Ride by member&casual">
 
 The table indicates that members have a higher number of rides compared to casual riders, which can be attributed to the additional benefits and improved services available to members. Interestingly, the average ride duration for casual riders surpasses that of members.
 
