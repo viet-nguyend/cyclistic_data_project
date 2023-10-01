@@ -249,9 +249,9 @@ where  ride_duration < 60
 
 Upon checking the database, I noticed that there are rows with start_station_name having the same value as start_station_id, this could also happen to column end_station_name and end_station_id
 
-<img src="Screenshot (223).png" alt="alt text">
+<img src="png/Invalid_start_station_name.png" alt="alt text">
 
-<img src="Screenshot (225).png" alt="alt text">
+<img src="png/Invalid_end_station_name.png" alt="alt text">
 
 As I tried to find station_ids that match station_names, I noticed there are some stations that are invalid, which should be removed.
 
@@ -387,7 +387,7 @@ on cyclistic_data.ride_id = ride_mode.ride_id
 ```
 </details>
 
-<img src="Screenshot (280).png" alt="alt text">
+<img src="png/ride_mode.png" alt="alt text">
 
 Based on the image above, we can infer the following:
 
@@ -423,7 +423,7 @@ from ride_length
 
 </details>
 
-<img src="Screenshot (284).png" alt="alt text">
+<img src="png/median.png" alt="alt text">
 
 Based on the image above, we can infer that:
 
@@ -449,7 +449,7 @@ group by member_casual
 ```
 </details>
 
-<img src="Screenshot (256).png" alt="alt text">
+<img src="png/Ride_distribution.png" alt="alt text">
 
 The table indicates that members have a higher number of rides compared to casual riders, which can be attributed to the additional benefits and improved services available to members. Interestingly, the average ride duration for casual riders surpasses that of members.
 
@@ -473,7 +473,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-<img src="Screenshot (257).png" alt="alt text">
+<img src="png/ride_distribution_by_rideable_type.png" alt="alt text">
 
 Based on the table, we can infer that members exclusively utilized classic bikes and electric bikes. Furthermore, a consistent pattern emerges where members completed more rides than casual riders, while the average ride duration for casual riders consistently exceeded that of members. Notably, docked bikes exhibited the highest average usage duration. To gain deeper insights into the behavior and preferences of members and casual users, further analysis will be conducted.
 
@@ -504,7 +504,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-<img src="Screenshot (261).png" alt="alt text">
+<img src="png/dow_hour_ride.png" alt="alt text">
 
 <details>
   <summary>Show SQL query</summary>
@@ -543,7 +543,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-<img src="Screenshot (265).png" alt="alt text">
+<img src="png/ride_by_dow.png" alt="alt text">
 
 Member: According to the table, most rides are on weekday from Monday to Friday, usually in the afternoon from 4 pm and in the morning from 7 pm, which are rush hours when people start and end their day. The number of rides starts increasing from Monday and reaches its peak on Wednesday, and then consitently decrease from Thursday to Sunday. Regarding the average time of bike usage of members, the average duration members using bikes shows relatively similar from Monday to Thursday, approximately 11 minutes, whereas on the weekend the average time members spend cycling increase gradually from 12 minutes on Friday to 14 minutes on Sunday. This suggests that members mainly use bicycles as a mean of transporation for work and school, because most rides are usually at rush hours on weekday. On the contrary to the number of rides and the average duration on weekday, the average time for using bikes on the weekend shows a rise but the number or rides decrease, which indicates that the purpose of bike usage by member on the weekend are for recreational activities.
 
@@ -590,7 +590,7 @@ order by month
 ```
 </details>
 
-<img src="Screenshot (268).png" alt="alt text">
+<img src="png/ride_month.png" alt="alt text">
 
 Member: From the table, it's evident that the number of rides by members begins to increase in February, peaks in August, and then gradually decreases until January. The average usage duration appears to follow a similar pattern to the number of rides. This suggests that members prefer to ride during the summer months, enjoying the pleasant and comfortable weather, while they tend to avoid riding in the winter or during cold temperature periods
 
@@ -624,7 +624,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-<img src="Screenshot (275).png" alt="alt text">
+<img src="png/member_fav_station.png" alt="alt text">
 
 According to the table, start and end station Kingsbury St & Kinzie St has the most rides, and almost all of the ride has the same start and end station, which explains that most of the trip that members took are round trips. 
 
@@ -652,7 +652,7 @@ order by count(ride_id) desc
 ```
 </details>
 
-<img src="Screenshot (278).png" alt="alt text">
+<img src="png/casual_fav_station.png" alt="alt text">
 
 For casual riders, most rides started and ended at the same station, Streeter Dr & Grand Ave. This is similar to member, which mean that most of the rides done by casual riders are round trips.
 
