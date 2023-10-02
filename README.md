@@ -596,11 +596,9 @@ Member: From the table, it's evident that the number of rides by members begins 
 
 Casual: Like members, both fall and summer stand out as the two seasons with the highest number of rides. However, the average duration of each month shows significant fluctuations with a wider range than that of members
 
-In general, both member and casual riders prefer to ride in the summer and fall.
+In conclusion, it is evident that both members and casual riders exhibit a preference for riding during the summer and fall seasons
 
-- Top bike station
-
-member
+- Top bike station of members
 
 <details>
   <summary>Show SQL query</summary>
@@ -626,9 +624,9 @@ order by count(ride_id) desc
 
 <img src="png/member_fav_station.png" alt="alt text">
 
-According to the table, start and end station Kingsbury St & Kinzie St has the most rides, and almost all of the ride has the same start and end station, which explains that most of the trip that members took are round trips. 
+The top start and end station for members is Kingsbury St & Kinzie St, and this pattern is consistent among other stations with a high number of rides, indicating that most of members' rides are round trips.
 
-casual ride
+- Top bike station of casual users
 
 <details>
   <summary>Show SQL query</summary>
