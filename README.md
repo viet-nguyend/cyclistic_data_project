@@ -67,7 +67,7 @@ I am using PostgreSQL to store the data in database tables and perform SQL queri
 
 ### Creating database and storing the datasets into tables
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 	
 ```sql
 create table bike_one_052021(
@@ -172,7 +172,7 @@ from bike_twelve_042022);
 
 ### Data Exploration and Inspection
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 	
 ```sql
 --view table
@@ -221,7 +221,7 @@ or member_casual is null
 When checking for ride duration, I found that there are rides with negative ride duration, this indicates that the ride ended earlier than it started, which is not possible. At the same time, I would also check for rides with a ride duration of over 24 hours (86400 seconds), because it is considered a lost or stolen bike arcording to this article [link](https://help.divvybikes.com/hc/en-us/articles/360033484791-What-if-I-keep-a-bike-out-too-long-) 
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 
 ```sql
 ---using CTE to create a temporary table contains value of ride_length
@@ -271,7 +271,7 @@ There are no matching station_ids for station_names presented in the tables. How
 ### Data cleaning
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 	
 ```sql
 ---Delete from the table where rows contain NULL
@@ -353,7 +353,7 @@ In this phase, we will do descriptive statistics, perform calculations, and anal
 We will first look at the modes of our rider types, bike types, stations, and temporal columns.
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 	
 ```sql
 with ride_mode as (
@@ -400,7 +400,7 @@ Based on the image above, we can infer the following:
 - The peak part of day is Afternoon and the peak hour is 5 PM
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 
 ```sql
 with ride_length as (
@@ -434,7 +434,7 @@ Based on the image above, we can infer that:
 ### Rides distribution
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 
 ```sql
 with ride_length as (
@@ -456,7 +456,7 @@ The table indicates that members have a higher number of rides compared to casua
 - Rides distribution by types and member_casual
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 
 ```sql
 with ride_distribution as (
@@ -480,7 +480,7 @@ Based on the table, we can infer that members exclusively utilized classic bikes
 - Rides distribution by hours and days
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 
 ```sql
 select member_casual,
@@ -507,7 +507,7 @@ order by count(ride_id) desc
 <img src="png/dow_hour_ride.png" alt="alt text">
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 
 ```sql
 with ride_distribution as (select ride_id, member_casual, to_char(started_at,'day') as day_of_week,
@@ -554,7 +554,7 @@ In summary, member and casual riders tend to ride in the afternoon and evening. 
 - Rides distributrion by month
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 	
 ```sql
 with ride_distribution as (select ride_id, member_casual, date_part('month', started_at) as month,
@@ -601,7 +601,7 @@ In conclusion, it is evident that both members and casual riders exhibit a prefe
 - Top bike station of members
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 
 ```sql
 select member_casual,
@@ -629,7 +629,7 @@ The top start and end station for members is Kingsbury St & Kinzie St, and this 
 - Top bike station of casual users
 
 <details>
-  <summary>Show SQL query</summary>
+  <summary>Click to show SQL query</summary>
 
 ```sql
 select member_casual,
@@ -658,7 +658,7 @@ For casual riders, most rides started and ended at the same station, Streeter Dr
 
 In this phase, we will create visualizations and share our key findings.
 
-[Dashboard](https://public.tableau.com/views/Data_16953905192160/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link)
+## [Dashboard](https://public.tableau.com/views/Data_16953905192160/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link)
 
 ### Key insight
 
