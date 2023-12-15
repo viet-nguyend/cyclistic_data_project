@@ -1,5 +1,6 @@
 # Cyclistic
 Google Data Analytics Professional Certificate Capstone Project
+
 ### Scenario
 
 I am a junior data analyst working in the marketing analyst team at Cyclistic, a bike-share company in Chicago. The director
@@ -31,6 +32,11 @@ For this case study, I will be using the Google Data Analytics Certificate proce
 ### Business Task
 
 Identify ride patterns to help us understand the difference between members and casual users, which will aid in designing a marketing strategy that aims to convert casual riders into members.
+
+## Share
+The Share phase of the Data Analysis process normally comes after the rest of the phases. However I wanted to display the final result of this case study up front.
+
+# [Link to Dashboard](https://public.tableau.com/views/Data_16953905192160/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link)
 
 ## Prepare
 
@@ -653,12 +659,6 @@ order by count(ride_id) desc
 <img src="png/casual_fav_station.png" alt="alt text">
 
 For casual riders, most rides started and ended at the same station, Streeter Dr & Grand Ave. This is similar to member, which mean that most of the rides done by casual riders are round trips.
-
-## Share
-
-In this phase, we will create visualizations and share our key findings.
-
-## [Dashboard](https://public.tableau.com/views/Data_16953905192160/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link)
 
 ### Key insight
 
