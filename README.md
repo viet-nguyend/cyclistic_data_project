@@ -36,7 +36,7 @@ Identify ride patterns to help us understand the difference between members and 
 ## Share
 The Share phase of the Data Analysis process normally comes after the rest of the phases. However I wanted to display the final result of this case study up front.
 
-# [Link to Dashboard](https://public.tableau.com/views/Data_16953905192160/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link)
+### [Link to Dashboard](https://public.tableau.com/views/Data_16953905192160/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link)
 
 ## Prepare
 
